@@ -38,14 +38,14 @@ Pour utiliser l’API Haloscan dans votre GPT personnalisé :
 
 1. Un compte Haloscan valide et une clé API.  
 2. Connectez-vous à Haloscan ou inscrivez-vous pour créer un compte.  
-3. Obtenez votre clé API : [Cliquez ici](#)  
+3. Obtenez votre clé API : [Cliquez ici](https://tool.haloscan.com/user/api)  
 4. Gardez votre clé API confidentielle.
 
 ### OpenAI / ChatGPT
 
 1. Un compte ChatGPT avec un **plan Plus** ou **plan Entreprise** (nécessaire pour les GPT personnalisés).  
 2. Connectez-vous ou inscrivez-vous.  
-3. Créez votre premier GPT : [Cliquez ici](#)  
+3. Créez votre premier GPT : [Cliquez ici](https://chatgpt.com/gpts)  
 4. Cliquez sur **+ Créer** pour commencer.
 
 ---
@@ -68,10 +68,10 @@ Pour utiliser l’API Haloscan dans votre GPT personnalisé :
    - **Clé API :** Votre clé API Haloscan  
    - **Type Auth :** Personnalisé  
    - **Nom de l’en-tête personnalisé :** `haloscan-api-key`  
-4. Schéma :  
-   - Copiez le lien du fichier OpenAPI  
-   - Cliquez sur **Importer depuis l’URL** et collez le lien  
-5. Politique de confidentialité : collez le lien
+4. Schéma :   
+   - Copiez le contenu du fichier `keyword-domain.yaml` ci-dessous.  
+   - Collez directement ce contenu dans le champ **Schéma** lors de la création de l’action.
+5. Politique de confidentialité : [Copier/collez ce lien](https://occirank.fr)
 
 ### Étape 3 : Configurer l’accès au GPT
 
@@ -88,22 +88,23 @@ Pour utiliser l’API Haloscan dans votre GPT personnalisé :
 
 ## Actions Haloscan
 
-Le GPT inclura une liste d’actions, par exemple :
+Le GPT inclura une liste d’actions : 
 
-### Premier GPT (depuis le premier fichier OpenAPI)
+> L’API Haloscan fournit **33 actions**. Chaque fichier OpenAPI peut contenir un maximum de 30 opérations, donc les actions sont réparties sur **deux fichiers OpenAPI**.  
+> - Fichier `keyword-domain.yaml` : contient la liste des actions liées aux mots-clés et aux domaines (Keywords Overview, Keywords Match, Domains Overview, etc.)  
+> - Fichier `expired-gmb.yaml` : contient les actions liées aux domaines expirés et aux backlinks GMB (Domains Expired, Domains GMB Backlinks, etc.)
 
+### Premier GPT (depuis le premier fichier OpenAPI `keyword-domain.yaml`)
+
+- Crédit utilisateur
 - Vue d’ensemble des mots-clés  
 - Correspondance des mots-clés  
 - Mots-clés similaires  
 - Vue d’ensemble des domaines  
 - Positions des domaines  
-- Pages principales des domaines  
+- Pages principales des domaines 
 
-> L’API Haloscan fournit **33 actions**. Chaque fichier OpenAPI peut contenir un maximum de 30 opérations, donc les actions sont réparties sur **deux fichiers OpenAPI**.  
-> - Lien du premier fichier : fourni à l’étape 2  
-> - Lien du deuxième fichier : utilisez les mêmes étapes pour créer un autre GPT
-
-### Deuxième GPT (depuis le deuxième fichier OpenAPI)
+### Deuxième GPT (depuis le deuxième fichier OpenAPI `expired-gmb.yaml`)
 
 - Domaines expirés  
 - Révélation des domaines expirés  
