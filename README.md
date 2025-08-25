@@ -1,129 +1,131 @@
-# Custom GPT for Haloscan
+# GPT Personnalisé pour Haloscan
 
-This repository provides a guide and setup for creating a **Custom GPT** that integrates with **Haloscan**, allowing your chatbot to fetch SEO data and provide actionable insights.
+Ce dépôt fournit un guide et une configuration pour créer un **GPT personnalisé** qui s’intègre avec **Haloscan**, permettant à votre chatbot de récupérer des données SEO et de fournir des recommandations exploitables.
 
 ---
 
-## Table of Contents
+## Table des matières
 
 - [Introduction](#introduction)  
-- [Prerequisites](#prerequisites)  
-- [Creating Your Custom GPT](#creating-your-custom-gpt)  
-  - [Step 1: Fill in GPT Details](#step-1-fill-in-gpt-details)  
-  - [Step 2: Set up Actions](#step-2-set-up-actions)  
-  - [Step 3: Configure GPT Access](#step-3-configure-gpt-access)  
-  - [Step 4: Modify GPT Privacy Settings](#step-4-modify-gpt-privacy-settings)  
-- [Haloscan Actions](#haloscan-actions)  
-- [Example API Calls](#example-api-calls)  
+- [Prérequis](#prérequis)  
+- [Création de votre GPT personnalisé](#création-de-votre-gpt-personnalisé)  
+  - [Étape 1 : Remplir les détails du GPT](#étape-1--remplir-les-détails-du-gpt)  
+  - [Étape 2 : Configurer les actions](#étape-2--configurer-les-actions)  
+  - [Étape 3 : Configurer l’accès au GPT](#étape-3--configurer-laccès-au-gpt)  
+  - [Étape 4 : Modifier les paramètres de confidentialité du GPT](#étape-4--modifier-les-paramètres-de-confidentialité-du-gpt)  
+- [Actions Haloscan](#actions-haloscan)  
+- [Exemples d’appels API](#exemples-dappels-api)  
 
 ---
 
 ## Introduction
 
-Haloscan is an SEO tool that provides insights into:
+Haloscan est un outil SEO qui fournit des informations sur :
 
-- Website performance  
-- Keyword metrics  
-- Online visibility  
+- La performance des sites web  
+- Les métriques de mots-clés  
+- La visibilité en ligne  
 
-It helps users analyze data and make informed SEO decisions. This tutorial guides you step by step through creating a **Custom GPT** that integrates with Haloscan.
+Il aide les utilisateurs à analyser les données et à prendre des décisions SEO éclairées. Ce tutoriel vous guide étape par étape pour créer un **GPT personnalisé** qui s’intègre à Haloscan.
 
 ---
 
-## Prerequisites
+## Prérequis
 
-To work with Haloscan API in your Custom GPT:
+Pour utiliser l’API Haloscan dans votre GPT personnalisé :
 
 ### Haloscan
 
-1. A valid Haloscan account and API key.  
-2. Log in to Haloscan or register for a new account.  
-3. Get your API key: [Click here](#)  
-4. Keep your API key secret.
+1. Un compte Haloscan valide et une clé API.  
+2. Connectez-vous à Haloscan ou inscrivez-vous pour créer un compte.  
+3. Obtenez votre clé API : [Cliquez ici](#)  
+4. Gardez votre clé API confidentielle.
 
 ### OpenAI / ChatGPT
 
-1. A ChatGPT account with a **Plus plan** or **Enterprise plan** (required for Custom GPTs).  
-2. Log in or register.  
-3. Create your first GPT: [Click here](#)  
-4. Click **+ Create** to start.
+1. Un compte ChatGPT avec un **plan Plus** ou **plan Entreprise** (nécessaire pour les GPT personnalisés).  
+2. Connectez-vous ou inscrivez-vous.  
+3. Créez votre premier GPT : [Cliquez ici](#)  
+4. Cliquez sur **+ Créer** pour commencer.
 
 ---
 
-## Creating Your Custom GPT
+## Création de votre GPT personnalisé
 
-### Step 1: Fill in GPT Details
+### Étape 1 : Remplir les détails du GPT
 
-- **Avatar:** Optional  
-- **Name:** e.g., `Haloscan SEO Assistant`  
-- **Description:** e.g., `Fetches SEO data from Haloscan and provides actionable insights`  
-- Leave other fields empty.
+- **Avatar :** Facultatif  
+- **Nom :** par exemple `Assistant SEO Haloscan`  
+- **Description :** par exemple `Récupère les données SEO de Haloscan et fournit des recommandations exploitables`  
+- Laissez les autres champs vides.
 
-### Step 2: Set up Actions
+### Étape 2 : Configurer les actions
 
-1. Scroll to the bottom of the form to **Actions**  
-2. Click **Create new action**  
-3. Authentication:
-   - **Authentication Type:** API Key  
-   - **API Key:** Your Haloscan API Key  
-   - **Auth Type:** Custom  
-   - **Custom Header Name:** `haloscan-api-key`  
-4. Schema:
-   - Copy the OpenAPI spec link  
-   - Click **Import from URL** and paste the link  
-5. Privacy policy: Paste the link
+1. Faites défiler le formulaire jusqu’à **Actions**  
+2. Cliquez sur **Créer une nouvelle action**  
+3. Authentification :  
+   - **Type d’authentification :** API Key  
+   - **Clé API :** Votre clé API Haloscan  
+   - **Type Auth :** Personnalisé  
+   - **Nom de l’en-tête personnalisé :** `haloscan-api-key`  
+4. Schéma :  
+   - Copiez le lien du fichier OpenAPI  
+   - Cliquez sur **Importer depuis l’URL** et collez le lien  
+5. Politique de confidentialité : collez le lien
 
-### Step 3: Configure GPT Access
+### Étape 3 : Configurer l’accès au GPT
 
-1. Click **Create**  
-2. Choose who can use the GPT (**Only me** for personal use)  
-3. Click **Save**  
-4. Click **View GPT** to see your newly created GPT
+1. Cliquez sur **Créer**  
+2. Choisissez qui peut utiliser le GPT (**Moi uniquement** pour un usage personnel)  
+3. Cliquez sur **Enregistrer**  
+4. Cliquez sur **Voir GPT** pour vérifier votre GPT nouvellement créé
 
-### Step 4: Modify GPT Privacy Settings
+### Étape 4 : Modifier les paramètres de confidentialité du GPT
 
-- Change from **Ask** to **Always allow**
-
----
-
-## Haloscan Actions
-
-The GPT will include a list of actions, for example:
-
-- Keywords Overview  
-- Keywords Match  
-- Keywords Similar  
-- Domains Overview  
-- Domains Positions  
-- Domains Top Pages  
-
-> Haloscan API provides **33 actions**. Each OpenAPI file can have a maximum of 30 operations, so the actions are split into **two OpenAPI files**.  
-> - First file link: provided in Step 2  
-> - Second file link: use the same steps to create another GPT  
-
-Second GPT actions include:
-
-- Domains Expired  
-- Domains Expired Reveal  
-- Domains GMB Backlinks  
-- Domains GMB Backlinks Map  
-- Domains GMB Backlinks Categories  
-- User Credit  
+- Changez de **Demander** à **Toujours autoriser**
 
 ---
 
-## Example API Calls
+## Actions Haloscan
 
-- Test your GPT by sending simple prompts, such as a website URL or keyword.  
-- The GPT should return structured SEO data fetched from Haloscan API.  
+Le GPT inclura une liste d’actions, par exemple :
 
-Once tested, your GPT can answer SEO-related questions like:
+### Premier GPT (depuis le premier fichier OpenAPI)
 
-- Keyword ranking trends  
-- Website visibility metrics  
-- Competitor analysis data  
+- Vue d’ensemble des mots-clés  
+- Correspondance des mots-clés  
+- Mots-clés similaires  
+- Vue d’ensemble des domaines  
+- Positions des domaines  
+- Pages principales des domaines  
 
-This integration allows your chatbot to provide **real-time, actionable SEO insights directly from Haloscan**.
+> L’API Haloscan fournit **33 actions**. Chaque fichier OpenAPI peut contenir un maximum de 30 opérations, donc les actions sont réparties sur **deux fichiers OpenAPI**.  
+> - Lien du premier fichier : fourni à l’étape 2  
+> - Lien du deuxième fichier : utilisez les mêmes étapes pour créer un autre GPT
+
+### Deuxième GPT (depuis le deuxième fichier OpenAPI)
+
+- Domaines expirés  
+- Révélation des domaines expirés  
+- Backlinks GMB des domaines  
+- Carte des backlinks GMB  
+- Catégories de backlinks GMB  
+- Crédit utilisateur
 
 ---
 
+## Exemples d’appels API
+
+- Testez votre GPT en envoyant des requêtes simples, comme une URL de site web ou un mot-clé.  
+- Le GPT doit retourner des données SEO structurées récupérées depuis l’API Haloscan.
+
+Exemples d’utilisation :
+
+- Tendances de classement des mots-clés  
+- Mesures de visibilité des sites web  
+- Analyse des concurrents  
+
+Exemple de requête :
+
+```text
+"Analyse le mot-clé 'marketing digital' pour monsite.com"
