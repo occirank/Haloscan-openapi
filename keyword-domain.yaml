@@ -1,0 +1,2769 @@
+openapi: 3.1.0
+info:
+  title: Haloscan API
+  version: 1.0.0
+  description: API for accessing SEO informations
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://api.haloscan.com/api
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: haloscan-api-key
+  schemas:
+    KeywordsOverviewRequest:
+      type: object
+      required:
+        - keyword
+        - requested_data
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword
+        requested_data:
+          type: array
+          description: |
+            Sections to include. `metrics` is returned as `seo_metrics` and `ads_metrics`.
+          items:
+            type: string
+            enum:
+              - keyword_match
+              - related_search
+              - related_question
+              - similar_category
+              - similar_serp
+              - top_sites
+              - similar_highlight
+              - categories
+              - synonyms
+              - metrics
+              - volume_history
+              - serp
+          default:
+            - keyword_match
+            - related_search
+            - related_question
+            - similar_category
+            - similar_serp
+            - top_sites
+            - similar_highlight
+            - categories
+            - synonyms
+            - metrics
+            - volume_history
+            - serp
+        lang:
+          type: string
+          enum:
+            - fr
+            - en
+          description: Used for translating category labels (only if `categories` requested)
+    KeywordsMatchRequest:
+      type: object
+      required:
+        - keyword
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - keyword
+            - volume
+            - cpc
+            - competition
+            - kgr
+            - allintitle
+          description: |
+            Field used for sorting results.
+            Default sorts by descending volume.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        exact_match:
+          type: boolean
+          default: true
+          description: >
+            When FALSE, always ignore accents, punctuation, case, special characters, etc. when matching the seed
+            keyword.
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        word_count_min:
+          type: number
+          description: Min number of words making up the keyword.
+        word_count_max:
+          type: number
+          description: Max number of words making up the keyword.
+        include:
+          type: string
+          description: Regular expression for keywords to be included.
+        exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+      description: Query model for keyword discovery and filtering.
+    KeywordsSimilarRequest:
+      type: object
+      required:
+        - keyword
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - keyword
+            - similarity
+            - volume
+            - cpc
+            - competition
+            - kgr
+            - allintitle
+          description: |
+            Field used for sorting results.
+            Default is by descending similarity.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        similarity_min:
+          type: number
+        similarity_max:
+          type: number
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        score_min:
+          type: number
+          description: Minimum common top 100 score.
+        score_max:
+          type: number
+          description: Maximum common top 100 score.
+        p1_score_min:
+          type: number
+          description: Minimum common top 10 score.
+        p1_score_max:
+          type: number
+          description: Maximum common top 10 score.
+        word_count_min:
+          type: number
+          description: Min number of words making up the keyword.
+        word_count_max:
+          type: number
+          description: Max number of words making up the keyword.
+        include:
+          type: string
+          description: Regular expression for keywords to be included.
+        exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+      description: Query model for finding similar keywords and applying advanced filters.
+    KeywordsHighlightsRequest:
+      type: object
+      required:
+        - keyword
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - keyword
+            - similarity
+            - volume
+            - cpc
+            - competition
+            - kgr
+            - allintitle
+          description: |
+            Field used for sorting results.
+            Default is by descending similarity.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        exact_match:
+          type: boolean
+          default: true
+          description: >
+            When FALSE, always ignore accents, punctuation, case, special characters, etc. when matching the seed
+            keyword.
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        similarity_min:
+          type: number
+        similarity_max:
+          type: number
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        word_count_min:
+          type: number
+          description: Min number of words making up the keyword.
+        word_count_max:
+          type: number
+          description: Max number of words making up the keyword.
+        include:
+          type: string
+          description: Regular expression for keywords to be included.
+        exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+      description: Query model for finding similar keywords with exact match option and advanced filters.
+    KeywordsRelatedRequest:
+      type: object
+      required:
+        - keyword
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - depth
+            - keyword
+            - volume
+            - cpc
+            - competition
+            - kgr
+            - allintitle
+          description: |
+            Field used for sorting results.
+            Default sorts by descending depth (absolute value).
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        exact_match:
+          type: boolean
+          default: true
+          description: >
+            When FALSE, always ignore accents, punctuation, case, special characters, etc. when matching the seed
+            keyword.
+        depth_min:
+          type: number
+        depth_max:
+          type: number
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        word_count_min:
+          type: number
+          description: Min number of words making up the keyword.
+        word_count_max:
+          type: number
+          description: Max number of words making up the keyword.
+        include:
+          type: string
+          description: Regular expression for keywords to be included.
+        exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+      description: Query model for keyword discovery with depth-based sorting and advanced filters.
+    KeywordsQuestionsRequest:
+      type: object
+      required:
+        - keyword
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - depth
+            - question_type
+            - keyword
+            - volume
+            - cpc
+            - competition
+            - kgr
+            - allintitle
+          description: |
+            Field used for sorting results.
+            Default sorts by descending depth (absolute value).
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        exact_match:
+          type: boolean
+          default: true
+          description: >
+            When FALSE, always ignore accents, punctuation, case, special characters, etc. when matching the seed
+            keyword.
+        question_types:
+          type: array
+          description: >
+            An array containing any combination of [definition, how, how_expensive, how_many, what, when, where, who,
+            why, yesno, how_long, unknown].
+          items:
+            type: string
+            enum:
+              - definition
+              - how
+              - how_expensive
+              - how_many
+              - what
+              - when
+              - where
+              - who
+              - why
+              - yesno
+              - how_long
+              - unknown
+        keep_only_paa:
+          type: boolean
+          default: false
+          description: Whether to include only PAA (People Also Ask) from Google in the response.
+        depth_min:
+          type: number
+        depth_max:
+          type: number
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        word_count_min:
+          type: number
+          description: Min number of words making up the keyword.
+        word_count_max:
+          type: number
+          description: Max number of words making up the keyword.
+        include:
+          type: string
+          description: Regular expression for keywords to be included.
+        exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+      description: Query model for extracting question-type keywords with depth, PAA filter, and advanced constraints.
+    KeywordsSynonymsRequest:
+      type: object
+      required:
+        - keyword
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - keyword
+            - volume
+            - cpc
+            - competition
+            - kgr
+            - allintitle
+          description: |
+            Field used for sorting results.
+            Default sorts by descending volume.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        exact_match:
+          type: boolean
+          default: true
+          description: >
+            When FALSE, always ignore accents, punctuation, case, special characters, etc. when matching the seed
+            keyword.
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        word_count_min:
+          type: number
+          description: Min number of words making up the keyword.
+        word_count_max:
+          type: number
+          description: Max number of words making up the keyword.
+        include:
+          type: string
+          description: Regular expression for keywords to be included.
+        exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+      description: Query model for keyword discovery and filtering.
+    KeywordsFindRequest:
+      type: object
+      description: Discover keywords from one seed (`keyword`) or multiple seeds (`keywords`) using configurable source strategies.
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword. Use to find a single keyword; takes precedence over `keywords`.
+        keywords:
+          type: array
+          items:
+            type: string
+          description: Requested keywords (ignored if `keyword` is present).
+        keywords_sources:
+          type: array
+          items:
+            type: string
+            enum:
+              - match
+              - serp
+              - related
+              - highlights
+              - categories
+              - questions
+          default:
+            - serp
+            - related
+          description: Which strategies to use to find keywords from input.
+        keep_seed:
+          type: boolean
+          default: true
+          description: Whether to keep the input in the API response.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - keyword
+            - volume
+            - cpc
+            - competition
+            - kgr
+            - allintitle
+          description: |
+            Field used for sorting results.
+            Default sorts by descending modality_count.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        exact_match:
+          type: boolean
+          default: true
+          description: >
+            When FALSE, always ignore accents, punctuation, case, special characters, etc. when matching the seed
+            keyword(s).
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        include:
+          type: string
+          description: Regular expression for keywords to be included.
+        exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+    KeywordsSiteStructureRequest:
+      type: object
+      description: >
+        Group keywords into topical clusters. Supports a single seed (`keyword`) or bulk (`keywords`). When `keywords`
+        is present, `keyword` is ignored. Clustering can be automatic (`multi`) or rule-based (`manual`).
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword, ignored if `keywords` (bulk) is present.
+        keywords:
+          type: array
+          items:
+            type: string
+          minItems: 50
+          description: Requested keywords (bulk). Must contain at least 50 keywords.
+        exact_match:
+          type: boolean
+          default: true
+          description: >
+            When FALSE, always ignore accents, punctuation, case, special characters, etc. when matching the seed
+            keyword(s).
+        neighbours_sources:
+          type: array
+          items:
+            type: string
+            enum:
+              - ngram
+              - serp
+              - related
+              - highlights
+              - categories
+          description: |
+            Which strategies should be used to find neighbours for `keyword`. Ignored if `keywords` is used (bulk mode).
+        multipartite_modes:
+          type: array
+          items:
+            type: string
+            enum:
+              - ngram
+              - serp
+              - related
+              - highlights
+              - categories
+          description: |
+            Sources to build the multipartite graph (used when mode=multi). Ignored if mode≠multi.
+        neighbours_sample_max_size:
+          type: integer
+          minimum: 10
+          maximum: 2000
+          default: 1000
+          description: |
+            Max number of neighbour candidates to sample (single keyword only). Between 10 and 2000.
+        mode:
+          type: string
+          default: multi
+          enum:
+            - multi
+            - manual
+          description: >
+            Defines how groups are built. - **multi**: automatic, hierarchical clustering using proximity across
+            modalities in `multipartite_modes`
+              (strength influenced by `granularity`).
+            - **manual**: group when keywords share at least `manual_common_10` URLs in top 10 **AND**
+              at least `manual_common_100` URLs in top 100 of the last SERP.
+        granularity:
+          type: number
+          default: 1
+          description: >
+            Controls clustering strictness (mode=multi). Lower → fewer/larger groups; higher → more/smaller groups.
+            Reference values used in UI: 0.001 (insufficient), 0.01 (very low), 0.05 (low), 0.1 (mild), 0.25 (average),
+            0.67 (high), 1 (very high), 10 (excessive). Ignored if mode=manual.
+        manual_common_10:
+          type: integer
+          default: 2
+          description: In manual mode, minimum shared URLs in SERP top 10 to join the same group.
+        manual_common_100:
+          type: integer
+          default: 10
+          description: In manual mode, minimum shared URLs in SERP top 100 to join the same group.
+      allOf:
+        - if:
+            properties:
+              mode:
+                const: manual
+          then:
+            required:
+              - manual_common_10
+              - manual_common_100
+    KeywordsSerpCompareRequest:
+      type: object
+      required:
+        - keyword
+        - period
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword
+        period:
+          type: string
+          enum:
+            - 1 month
+            - 3 months
+            - 6 months
+            - 12 months
+            - custom
+        first_date:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+        second_date:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+    KeywordsSerpAvailableDatesRequest:
+      type: object
+      required:
+        - keyword
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword
+    KeywordsSerpPageEvolutionRequest:
+      type: object
+      required:
+        - keyword
+        - first_date
+        - second_date
+        - url
+      properties:
+        keyword:
+          type: string
+          description: Requested keyword
+        first_date:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+        second_date:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+        url:
+          type: string
+    KeywordsBulkRequest:
+      type: object
+      required:
+        - keywords
+      properties:
+        keywords:
+          type: array
+          description: Array containing the requested keywords.
+          items:
+            type: string
+          minItems: 1
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: keep
+          enum:
+            - keep
+            - keyword
+            - volume
+            - cpc
+            - competition
+            - kgr
+            - allintitle
+          description: |
+            Field used for sorting results. Value "keep" preserves the original input order.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        exact_match:
+          type: boolean
+          default: true
+          description: >
+            [Ignored when `order_by = keep` or not specified] When FALSE, always ignore accents, punctuation, case,
+            special characters, etc. when matching the seed keyword.
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        word_count_min:
+          type: number
+          description: Min number of words making up the keyword.
+        word_count_max:
+          type: number
+          description: Max number of words making up the keyword.
+        include:
+          type: string
+          description: Regular expression for keywords to be included.
+        exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+    KeywordsScrapRequest:
+      type: object
+      properties:
+        keywords:
+          type: array
+          items:
+            type: string
+      required:
+        - keywords
+    DomainsOverviewRequest:
+      type: object
+      required:
+        - input
+        - requested_data
+      properties:
+        input:
+          type: string
+          description: Requested input
+        mode:
+          type: string
+          description: Whether to look for a domain or a full url. Leave empty for auto detection
+        requested_data:
+          type: array
+          items:
+            type: string
+            enum:
+              - metrics
+              - positions_breakdown
+              - traffic_value
+              - categories
+              - best_keywords
+              - best_pages
+              - gmb_backlinks
+              - visibility_index_history
+              - positions_breakdown_history
+              - positions_and_pages_history
+        lang:
+          type: string
+    DomainsPositionsRequest:
+      type: object
+      description: Retrieve ranking keywords for a domain or a specific URL with rich filtering and sorting.
+      required:
+        - input
+      properties:
+        input:
+          type: string
+          description: Requested URL or domain.
+        mode:
+          type: string
+          default: auto
+          enum:
+            - auto
+            - root
+            - domain
+            - url
+          description: Whether to look for a domain or a full URL. Leave empty (auto) for detection.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - keyword
+            - volume
+            - traffic
+            - position
+            - url
+            - cpc
+            - competition
+            - kgr
+            - allintitle
+            - last_scrap
+            - word_count
+            - result_count
+          description: |
+            Field used for sorting results.
+            Default sort is by descending traffic, then ascending position.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        traffic_min:
+          type: number
+        traffic_max:
+          type: number
+        position_min:
+          type: number
+        position_max:
+          type: number
+        keyword_word_count_min:
+          type: number
+          description: Min number of words making up the keyword.
+        keyword_word_count_max:
+          type: number
+          description: Max number of words making up the keyword.
+        serp_date_min:
+          type: string
+          format: date
+          description: Min SERP date (YYYY-MM-DD).
+        serp_date_max:
+          type: string
+          format: date
+          description: Max SERP date (YYYY-MM-DD).
+        keyword_include:
+          type: string
+          description: Regular expression for keywords to be included.
+        keyword_exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+        title_include:
+          type: string
+          description: Regular expression for titles to be included.
+        title_exclude:
+          type: string
+          description: Regular expression for titles to be excluded.
+    DomainsTopPagesRequest:
+      type: object
+      description: Retrieve pages (or domains) with aggregate SEO metrics and history, filterable and sortable.
+      required:
+        - input
+      properties:
+        input:
+          type: string
+          description: Requested URL or domain.
+        mode:
+          type: string
+          default: auto
+          enum:
+            - auto
+            - root
+            - domain
+            - url
+          description: Whether to look for a domain or a full URL. Leave empty (auto) for detection.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - domain
+            - url
+            - first_time_seen
+            - last_time_seen
+            - known_versions
+            - total_traffic
+            - unique_keywords
+            - total_top_100
+            - total_top_50
+            - total_top_10
+            - total_top_3
+          description: |
+            Field used for sorting results.
+            Default sorts by descending total_traffic.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        known_versions_min:
+          type: number
+        known_versions_max:
+          type: number
+        total_traffic_min:
+          type: number
+        total_traffic_max:
+          type: number
+        unique_keywords_min:
+          type: number
+        unique_keywords_max:
+          type: number
+        total_top_3_min:
+          type: number
+        total_top_3_max:
+          type: number
+        total_top_10_min:
+          type: number
+        total_top_10_max:
+          type: number
+        total_top_50_min:
+          type: number
+        total_top_50_max:
+          type: number
+        total_top_100_min:
+          type: number
+        total_top_100_max:
+          type: number
+    DomainsHistoryPositionsRequest:
+      type: object
+      description: Retrieve ranking keywords for a domain or URL within a date range, with rich filters and sorting.
+      required:
+        - input
+        - date_from
+        - date_to
+      properties:
+        input:
+          type: string
+          description: Requested URL or domain.
+        mode:
+          type: string
+          default: auto
+          enum:
+            - auto
+            - root
+            - domain
+            - url
+          description: Whether to look for a domain or a full URL. Leave empty (auto) for detection.
+        date_from:
+          type: string
+          format: date
+          description: Start date (YYYY-MM-DD).
+        date_to:
+          type: string
+          format: date
+          description: End date (YYYY-MM-DD).
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - volume
+            - traffic
+            - position
+            - keyword
+            - url
+            - cpc
+            - competition
+            - kgr
+            - allintitle
+            - last_scrap
+            - word_count
+            - result_count
+          description: |
+            Field used for sorting results.
+            Default sorts by descending traffic and then ascending position.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        word_count_min:
+          type: number
+          description: Min number of words making up the keyword.
+        word_count_max:
+          type: number
+          description: Max number of words making up the keyword.
+        best_position_min:
+          type: number
+        best_position_max:
+          type: number
+        worst_position_min:
+          type: number
+        worst_position_max:
+          type: number
+        first_time_seen_min:
+          type: string
+          format: date
+          description: Min first-time-seen date (YYYY-MM-DD).
+        first_time_seen_max:
+          type: string
+          format: date
+          description: Max first-time-seen date (YYYY-MM-DD).
+        last_time_seen_min:
+          type: string
+          format: date
+          description: Min last-time-seen date (YYYY-MM-DD).
+        last_time_seen_max:
+          type: string
+          format: date
+          description: Max last-time-seen date (YYYY-MM-DD).
+        most_recent_position_min:
+          type: number
+        most_recent_position_max:
+          type: number
+        subdomain_count_min:
+          type: number
+        subdomain_count_max:
+          type: number
+        page_count_min:
+          type: number
+        page_count_max:
+          type: number
+        still_there:
+          type: boolean
+          description: >
+            When TRUE, only keep positions that are still held. When FALSE, only keep positions that were lost. Leave
+            empty to disable this filter.
+        keyword_include:
+          type: string
+          description: Regular expression for keywords to be included.
+        keyword_exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+    DomainsHistoryPagesRequest:
+      type: object
+      description: Retrieve pages (or domains) with aggregate SEO metrics within a date range, with filtering and sorting.
+      required:
+        - input
+        - date_from
+        - date_to
+      properties:
+        input:
+          type: string
+          description: Requested URL or domain.
+        mode:
+          type: string
+          default: auto
+          enum:
+            - auto
+            - root
+            - domain
+            - url
+          description: Whether to look for a domain or a full URL. Leave empty (auto) for detection.
+        date_from:
+          type: string
+          format: date
+          description: Start date in YYYY-MM-DD format.
+        date_to:
+          type: string
+          format: date
+          description: End date in YYYY-MM-DD format.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - domain
+            - url
+            - first_time_seen
+            - last_time_seen
+            - known_versions
+            - total_traffic
+            - unique_keywords
+            - total_top_100
+            - total_top_50
+            - total_top_10
+            - total_top_3
+          description: |
+            Field used for sorting results.
+            Default sorts by descending total_traffic.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        known_versions_min:
+          type: number
+        known_versions_max:
+          type: number
+        total_traffic_min:
+          type: number
+        total_traffic_max:
+          type: number
+        unique_keywords_min:
+          type: number
+        unique_keywords_max:
+          type: number
+        total_top_3_min:
+          type: number
+        total_top_3_max:
+          type: number
+        total_top_10_min:
+          type: number
+        total_top_10_max:
+          type: number
+        total_top_50_min:
+          type: number
+        total_top_50_max:
+          type: number
+        total_top_100_min:
+          type: number
+        total_top_100_max:
+          type: number
+    PageBestKeywordsRequest:
+      type: object
+      required:
+        - input
+      properties:
+        input:
+          type: array
+          description: Requested URLs.
+          items:
+            type: string
+          minItems: 1
+        lineCount:
+          type: integer
+          minimum: 1
+          maximum: 10
+          default: 3
+          description: Number of keywords to return (1–10).
+        strategy:
+          type: string
+          default: both
+          enum:
+            - both
+            - only_lost
+            - only_active
+          description: Whether to return all positioned keywords, only active ones, or only lost ones.
+    DomainsKeywordsRequest:
+      type: object
+      description: Retrieve metrics for a given domain/URL filtered to a specific list of keywords.
+      required:
+        - input
+        - keywords
+      properties:
+        input:
+          type: string
+          description: Requested URL or domain.
+        mode:
+          type: string
+          default: auto
+          enum:
+            - auto
+            - root
+            - domain
+            - url
+          description: Whether to look for a domain or a full URL. Leave empty (auto) for detection.
+        keywords:
+          type: array
+          description: Array containing the requested keywords.
+          items:
+            type: string
+          minItems: 1
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - keyword
+            - volume
+            - cpc
+            - competition
+            - kgr
+            - allintitle
+          description: Field used for sorting results.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Between 0 and 1.
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        position_min:
+          type: number
+        position_max:
+          type: number
+        traffic_min:
+          type: number
+        traffic_max:
+          type: number
+        title_word_count_min:
+          type: number
+          description: Min number of words in the title.
+        title_word_count_max:
+          type: number
+          description: Max number of words in the title.
+        serp_date_min:
+          type: string
+          format: date
+          description: Min SERP date (YYYY-MM-DD).
+        serp_date_max:
+          type: string
+          format: date
+          description: Max SERP date (YYYY-MM-DD).
+        keyword_include:
+          type: string
+          description: Regular expression for keywords to be included.
+        keyword_exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+        title_include:
+          type: string
+          description: Regular expression for titles to be included.
+        title_exclude:
+          type: string
+          description: Regular expression for titles to be excluded.
+    DomainsBulkRequest:
+      type: object
+      description: Retrieve aggregate SEO metrics for multiple URLs or domains, preserving input order if desired.
+      required:
+        - inputs
+      properties:
+        inputs:
+          type: array
+          description: Array containing the requested URLs or domains.
+          items:
+            type: string
+          minItems: 1
+        mode:
+          type: string
+          default: auto
+          enum:
+            - auto
+            - root
+            - domain
+            - url
+          description: Whether to look for a domain or a full URL. Leave empty (auto) for detection.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: keep
+          enum:
+            - keep
+            - first_time_seen
+            - last_time_seen
+            - indexed_pages
+            - unique_keywords
+            - total_traffic
+            - total_top_100
+            - total_top_50
+            - total_top_10
+            - total_top_3
+            - name
+            - type
+            - total_traffic_value
+          description: |
+            Field used for sorting results. Value "keep" preserves the original input order.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        total_traffic_min:
+          type: number
+        total_traffic_max:
+          type: number
+        unique_keywords_min:
+          type: number
+        unique_keywords_max:
+          type: number
+        total_top_3_min:
+          type: number
+        total_top_3_max:
+          type: number
+        total_top_10_min:
+          type: number
+        total_top_10_max:
+          type: number
+        total_top_50_min:
+          type: number
+        total_top_50_max:
+          type: number
+        total_top_100_min:
+          type: number
+        total_top_100_max:
+          type: number
+    DomainsCompetitorsRequest:
+      type: object
+      description: Resolve a domain or URL with simple pagination controls.
+      required:
+        - input
+      properties:
+        input:
+          type: string
+          description: Requested URL or domain.
+        mode:
+          type: string
+          default: auto
+          enum:
+            - auto
+            - root
+            - domain
+            - url
+          description: Whether to look for a domain or a full URL. Leave empty (auto) for detection.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+    DomainsCompetitorsKeywordsDiffRequest:
+      type: object
+      description: >
+        Compare a URL/domain against competitors to analyze overlapping/missing keyword positions. You can pass
+        competitors explicitly, or let the API auto-detect them.
+      required:
+        - input
+      properties:
+        input:
+          type: string
+          description: Requested URL or domain.
+        competitors:
+          description: List of competitors to compare the input to. Use `"auto"` to auto-detect.
+          oneOf:
+            - type: string
+              const: auto
+            - type: array
+              items:
+                type: string
+              minItems: 1
+          default: auto
+        mode:
+          type: string
+          default: auto
+          enum:
+            - auto
+            - root
+            - domain
+            - url
+          description: Whether to look for a domain or a full URL. Leave empty (auto) for detection.
+        exclusive:
+          type: boolean
+          description: Include positions where only the search input is positioned (no competitors).
+        missing:
+          type: boolean
+          description: Include positions where the input is NOT positioned, and ≥1 competitor IS.
+        besting:
+          type: boolean
+          description: Include positions where the input outranks at least one competitor.
+        bested:
+          type: boolean
+          description: Include positions where at least one competitor outranks the input.
+        acceptedTypes:
+          description: >
+            Filter by result type. Optional if you use the boolean flags above (faster to use flags). With this, you can
+            separate **mixed** keywords (input better than some competitors and worse than others). In that case,
+            **bested**/**besting** become absolute (vs. every competitor present).
+          oneOf:
+            - type: string
+              const: auto
+            - type: array
+              uniqueItems: true
+              items:
+                type: string
+                enum:
+                  - missing
+                  - exclusive
+                  - besting
+                  - bested
+                  - mixed
+          default: auto
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - best_reference_position
+            - best_reference_url
+            - best_reference_traffic
+            - best_competitor_position
+            - best_competitor_traffic
+            - competitors_positions
+            - unique_competitors_count
+            - type
+            - keyword
+            - volume
+            - cpc
+            - competition
+            - allintitle
+            - result_count
+            - kgr
+            - word_count
+            - best_competitor_url
+          description: >
+            Field used for sorting results. **default** sorts by descending `unique_competitors_count`, then by
+            descending `best_competitor_traffic`.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        best_competitor_traffic_min:
+          type: number
+        best_competitor_traffic_max:
+          type: number
+        best_competitor_traffic_keep_na:
+          type: boolean
+        best_competitor_position_min:
+          type: number
+        best_competitor_position_max:
+          type: number
+        best_reference_traffic_min:
+          type: number
+        best_reference_traffic_max:
+          type: number
+        best_reference_traffic_keep_na:
+          type: boolean
+        best_reference_position_min:
+          type: number
+        best_reference_position_max:
+          type: number
+        competitors_positions_min:
+          type: number
+        competitors_positions_max:
+          type: number
+        unique_competitors_count_min:
+          type: number
+        unique_competitors_count_max:
+          type: number
+        keyword_word_count_min:
+          type: number
+        keyword_word_count_max:
+          type: number
+        keyword_include:
+          type: string
+          description: Regular expression for keywords to be included.
+        keyword_exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        volume_keep_na:
+          type: boolean
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        cpc_keep_na:
+          type: boolean
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+        competition_keep_na:
+          type: boolean
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kgr_keep_na:
+          type: boolean
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        allintitle_keep_na:
+          type: boolean
+        google_indexed_min:
+          type: number
+        google_indexed_max:
+          type: number
+        google_indexed_keep_na:
+          type: boolean
+    DomainsCompetitorsBestPagesRequest:
+      type: object
+      description: Compare a URL/domain against competitors at the page level with traffic and keyword-overlap metrics.
+      required:
+        - input
+      properties:
+        input:
+          type: string
+          description: Requested URL or domain.
+        competitors:
+          description: List of competitors to compare the input to. Use `"auto"` to auto-detect.
+          oneOf:
+            - type: string
+              const: auto
+            - type: array
+              items:
+                type: string
+              minItems: 1
+          default: auto
+        mode:
+          type: string
+          default: auto
+          enum:
+            - auto
+            - root
+            - domain
+            - url
+          description: Whether to look for a domain or a full URL. Leave empty (auto) for detection.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - positions
+            - total_traffic
+            - keywords
+            - exclusive_keywords
+            - besting_keywords
+            - bested_keywords
+            - url
+            - most_alike_url
+          description: Field used for sorting results.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        total_traffic_min:
+          type: number
+        total_traffic_max:
+          type: number
+        total_traffic_keep_na:
+          type: boolean
+        positions_min:
+          type: number
+        positions_max:
+          type: number
+        keywords_min:
+          type: number
+        keywords_max:
+          type: number
+        exclusive_keywords_min:
+          type: number
+          description: Min value for keywords exclusive to the competitor's page.
+        exclusive_keywords_max:
+          type: number
+          description: Max value for keywords exclusive to the competitor's page.
+        besting_keywords_min:
+          type: number
+          description: Min value where the competitor's page outranks any of the input's pages.
+        besting_keywords_max:
+          type: number
+          description: Max value where the competitor's page outranks any of the input's pages.
+        bested_keywords_min:
+          type: number
+          description: Min value where the competitor's page is ranked worse than at least one of the input's pages.
+        bested_keywords_max:
+          type: number
+          description: Max value where the competitor's page is ranked worse than at least one of the input's pages.
+    DomainsCompetitorsBestPosRequest:
+      type: object
+      description: Compare competitors across a list of keywords with ranking and traffic filters.
+      required:
+        - competitors
+        - keywords
+      properties:
+        competitors:
+          type: array
+          description: List of competitor domains or root domains.
+          items:
+            type: string
+          minItems: 1
+        keywords:
+          type: array
+          description: List of keywords to look for.
+          items:
+            type: string
+          minItems: 1
+        mode:
+          type: string
+          default: root
+          enum:
+            - root
+            - domain
+          description: Whether to look for a root domain or subdomain.
+        lineCount:
+          type: integer
+          minimum: 1
+          default: 20
+          description: Max number of returned results.
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for paginated results.
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - best_reference_position
+            - best_competitor_position
+            - best_competitor_traffic
+            - competitors_positions
+            - unique_competitors_count
+            - type
+            - keyword
+            - volume
+            - ads_volume
+            - cpc
+            - competition
+            - allintitle
+            - result_count
+            - kgr
+            - kvi
+            - word_count
+            - best_competitor_url
+          description: >
+            Field used for sorting results. "default" sorts by descending unique_competitors_count, then by descending
+            best_competitor_traffic.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order.
+        best_competitor_traffic_min:
+          type: number
+        best_competitor_traffic_max:
+          type: number
+        best_competitor_traffic_keep_na:
+          type: boolean
+        best_competitor_position_min:
+          type: number
+        best_competitor_position_max:
+          type: number
+        competitors_positions_min:
+          type: number
+        competitors_positions_max:
+          type: number
+        unique_competitors_count_min:
+          type: number
+        unique_competitors_count_max:
+          type: number
+        keyword_word_count_min:
+          type: number
+        keyword_word_count_max:
+          type: number
+        keyword_include:
+          type: string
+          description: Regular expression for keywords to be included.
+        keyword_exclude:
+          type: string
+          description: Regular expression for keywords to be excluded.
+        volume_min:
+          type: number
+        volume_max:
+          type: number
+        volume_keep_na:
+          type: boolean
+        cpc_min:
+          type: number
+        cpc_max:
+          type: number
+        cpc_keep_na:
+          type: boolean
+        competition_min:
+          type: number
+          minimum: 0
+          maximum: 1
+        competition_max:
+          type: number
+          minimum: 0
+          maximum: 1
+        competition_keep_na:
+          type: boolean
+        kgr_min:
+          type: number
+        kgr_max:
+          type: number
+        kgr_keep_na:
+          type: boolean
+        kvi_min:
+          type: number
+        kvi_max:
+          type: number
+        kvi_keep_na:
+          type: boolean
+        allintitle_min:
+          type: number
+        allintitle_max:
+          type: number
+        allintitle_keep_na:
+          type: boolean
+    DomainsVisibilityTrendsRequest:
+      type: object
+      description: Compute trend/summary metrics for multiple URLs or domains.
+      required:
+        - input
+      properties:
+        input:
+          type: array
+          description: Array containing the requested URLs or domains.
+          items:
+            type: string
+          minItems: 1
+        mode:
+          type: string
+          default: auto
+          enum:
+            - auto
+            - root
+            - domain
+            - url
+          description: Whether to look for a domain or a full URL. Leave empty (auto) for detection.
+        type:
+          type: string
+          default: trends
+          enum:
+            - first
+            - highest
+            - trends
+            - index
+          description: Determines how returned values are computed.
+    StandardResponse:
+      type: object
+      description: Standard response envelope for keyword explorer endpoints
+      properties:
+        request_id:
+          type: string
+          description: Server-generated trace ID
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO8601 response time
+        request:
+          type: object
+          description: Echo of the request parameters received by the server
+        meta:
+          type: object
+          description: Pagination and summary info
+          properties:
+            total:
+              type: integer
+              description: Total items matching the request
+            has_next:
+              type: boolean
+            processing_ms:
+              type: integer
+              description: Server-side processing time in milliseconds
+        data:
+          type: object
+          description: Endpoint-specific payload
+          additionalProperties: true
+        warnings:
+          type: array
+          items:
+            type: string
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid API Key
+security:
+  - ApiKeyAuth: []
+paths:
+  /user/credit:
+    get:
+      operationId: userCredits
+      x-openai-isConsequential: false
+      summary: Get user credit information
+      responses:
+        "200":
+          description: User credit details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/overview:
+    post:
+      operationId: keywordsOverview
+      x-openai-isConsequential: false
+      summary: Get overview data for a keyword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsOverviewRequest"
+      responses:
+        "200":
+          description: Keyword overview data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/match:
+    post:
+      operationId: keywordsMatch
+      x-openai-isConsequential: false
+      summary: Get matched keywords based on parameters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsMatchRequest"
+      responses:
+        "200":
+          description: Keywords match results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/similar:
+    post:
+      operationId: keywordsSimilar
+      x-openai-isConsequential: false
+      summary: Get similar keywords based on a requested keyword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsSimilarRequest"
+      responses:
+        "200":
+          description: Similar keywords match results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/highlights:
+    post:
+      operationId: keywordsHighlights
+      x-openai-isConsequential: false
+      summary: Get keyword highlight suggestions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsHighlightsRequest"
+      responses:
+        "200":
+          description: Keyword highlights results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/related:
+    post:
+      operationId: keywordsRelated
+      x-openai-isConsequential: false
+      summary: Get keyword related suggestions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsRelatedRequest"
+      responses:
+        "200":
+          description: Keyword related results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/questions:
+    post:
+      operationId: keywordsQuestions
+      x-openai-isConsequential: false
+      summary: Get question-based keywords for a given query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsQuestionsRequest"
+      responses:
+        "200":
+          description: Keyword related results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/synonyms:
+    post:
+      operationId: keywordsSynonyms
+      x-openai-isConsequential: false
+      summary: Get synonym keywords for a given keyword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsSynonymsRequest"
+      responses:
+        "200":
+          description: Keyword synonyms results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/find:
+    post:
+      operationId: keywordsFind
+      x-openai-isConsequential: false
+      summary: Find keywords based on input keyword(s)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsFindRequest"
+      responses:
+        "200":
+          description: Keyword synonyms results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/siteStructure:
+    post:
+      operationId: keywordsSiteStructure
+      x-openai-isConsequential: false
+      summary: Generate site structure from one or multiple keywords
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsSiteStructureRequest"
+      responses:
+        "200":
+          description: Keyword site structure results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/serp/compare:
+    post:
+      operationId: keywordsSerpCompare
+      x-openai-isConsequential: false
+      summary: Compare SERPs for a given keyword over two periods
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsSerpCompareRequest"
+      responses:
+        "200":
+          description: Keywords serp compare results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/serp/availableDates:
+    post:
+      operationId: keywordsSerpAvailableDates
+      x-openai-isConsequential: false
+      summary: Get available SERP dates for a given keyword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsSerpAvailableDatesRequest"
+      responses:
+        "200":
+          description: Keywords serp available dates results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/serp/pageEvolution:
+    post:
+      operationId: keywordsSerpPageEvolution
+      x-openai-isConsequential: false
+      summary: Get SERP page evolution for a given keyword and URL between two dates
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsSerpPageEvolutionRequest"
+      responses:
+        "200":
+          description: Keywords serp page evolution results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/bulk:
+    post:
+      operationId: keywordsBulk
+      x-openai-isConsequential: false
+      summary: Get bulk keyword data for multiple keywords
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsBulkRequest"
+      responses:
+        "200":
+          description: Keywords bulk results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /keywords/scrap:
+    post:
+      operationId: keywordsScrap
+      x-openai-isConsequential: false
+      summary: Scrap keyword data for multiple keywords
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsScrapRequest"
+      responses:
+        "200":
+          description: Keywords scrap results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/overview:
+    post:
+      operationId: domainsOverview
+      x-openai-isConsequential: false
+      summary: Get overview data for a given domain or URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsOverviewRequest"
+      responses:
+        "200":
+          description: Domains overview results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/positions:
+    post:
+      operationId: domainsPositions
+      x-openai-isConsequential: false
+      summary: Get SEO positions data for a given URL or domain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsPositionsRequest"
+      responses:
+        "200":
+          description: Domains positions results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/topPages:
+    post:
+      operationId: domainsTopPages
+      x-openai-isConsequential: false
+      summary: Get top-performing pages for a given URL or domain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsTopPagesRequest"
+      responses:
+        "200":
+          description: Domains top pages results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/history:
+    post:
+      operationId: domainsHistoryPositions
+      x-openai-isConsequential: false
+      summary: Get historical keyword data for a given domain or URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsHistoryPositionsRequest"
+      responses:
+        "200":
+          description: Domains history positions results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/pagesHistory:
+    post:
+      operationId: domainsHistoryPages
+      x-openai-isConsequential: false
+      summary: Get historical data for top pages of a domain or URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsHistoryPagesRequest"
+      responses:
+        "200":
+          description: Domains history pages results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/pageBestKeywords:
+    post:
+      operationId: pageBestKeywords
+      x-openai-isConsequential: false
+      summary: Get best keywords for a list of pages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PageBestKeywordsRequest"
+      responses:
+        "200":
+          description: Domains page best keywords results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/keywords:
+    post:
+      operationId: domainsKeywords
+      x-openai-isConsequential: false
+      summary: Get domain-specific data for selected keywords
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsKeywordsRequest"
+      responses:
+        "200":
+          description: Domains history positions results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/bulk:
+    post:
+      operationId: domainsBulk
+      x-openai-isConsequential: false
+      summary: Get bulk domain data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsBulkRequest"
+      responses:
+        "200":
+          description: Domains bulk results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/siteCompetitors:
+    post:
+      operationId: domainsCompetitors
+      x-openai-isConsequential: false
+      summary: Get competitors for a site or domain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsCompetitorsRequest"
+      responses:
+        "200":
+          description: Domains bulk results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/siteCompetitors/keywordsDiff:
+    post:
+      operationId: domainsCompetitorsKeywordsDiff
+      x-openai-isConsequential: false
+      summary: Compare keywords differences between a domain and its competitors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsCompetitorsKeywordsDiffRequest"
+      responses:
+        "200":
+          description: Domains competitors keywords diff results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/siteCompetitors/bestPages:
+    post:
+      operationId: domainsCompetitorsBestPages
+      x-openai-isConsequential: false
+      summary: Get best pages of competitors compared to the input domain or URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsCompetitorsBestPagesRequest"
+      responses:
+        "200":
+          description: Domains best pages results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/siteCompetitors/keywordsBestPos:
+    post:
+      operationId: domainsCompetitorsKeywordsBestPos
+      x-openai-isConsequential: false
+      summary: Get best positions of competitors for specified keywords
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsCompetitorsBestPosRequest"
+      responses:
+        "200":
+          description: Domains competitors keywords best pos results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/history/visibilityTrends:
+    post:
+      operationId: domainsVisibilityTrends
+      x-openai-isConsequential: false
+      summary: Get visibility trends for multiple domains or URLs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsVisibilityTrendsRequest"
+      responses:
+        "200":
+          description: Domains visibility trends results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"

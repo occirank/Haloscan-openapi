@@ -1,0 +1,487 @@
+openapi: 3.1.0
+info:
+  title: Haloscan API
+  version: 1.0.0
+  description: API for accessing SEO informations
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://api.haloscan.com/api
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: haloscan-api-key
+  schemas:
+    DomainsExpiredQueryRequest:
+      type: object
+      properties:
+        keyword:
+          type: string
+          description: Only keep expired domains that were positioned on keywords matching this expression.
+        lineCount:
+          type: number
+          default: 20
+          description: Max number of returned results
+        page:
+          type: number
+          default: 1
+          description: Page number of the results to return
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - total_traffic
+            - total_pages
+            - total_keywords
+            - total_domains
+            - median_position_strength
+            - first_seen
+            - last_seen
+            - median_position_date
+            - total_top_3_positions
+            - total_top_10_positions
+            - total_top_50_positions
+            - total_top_100_positions
+            - total_top_3_traffic
+            - total_top_10_traffic
+            - total_top_50_traffic
+            - total_top_100_traffic
+            - matching_keywords
+            - matching_pages
+            - matching_traffic
+            - matching_most_recent_position
+            - matching_top_3_positions
+            - matching_top_10_positions
+            - matching_top_50_positions
+            - matching_top_100
+            - first_time_available
+            - last_time_available
+            - fb_comments
+            - fb_shares
+            - referring_domains
+          description: Field used for sorting results. Default sort is by descending matching_traffic if keyword is present, or
+            total_traffic otherwise.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order
+        total_pages_min:
+          type: number
+        total_pages_max:
+          type: number
+        total_domains_min:
+          type: number
+        total_domains_max:
+          type: number
+        referring_domains_min:
+          type: number
+        referring_domains_max:
+          type: number
+        total_keywords_min:
+          type: number
+        total_keywords_max:
+          type: number
+        total_traffic_min:
+          type: number
+        total_traffic_max:
+          type: number
+        total_top_100_positions_min:
+          type: number
+        total_top_100_positions_max:
+          type: number
+        total_top_50_positions_min:
+          type: number
+        total_top_50_positions_max:
+          type: number
+        total_top_10_positions_min:
+          type: number
+        total_top_10_positions_max:
+          type: number
+        total_top_3_positions_min:
+          type: number
+        total_top_3_positions_max:
+          type: number
+        total_top_100_traffic_min:
+          type: number
+        total_top_100_traffic_max:
+          type: number
+        total_top_50_traffic_min:
+          type: number
+        total_top_50_traffic_max:
+          type: number
+        total_top_10_traffic_min:
+          type: number
+        total_top_10_traffic_max:
+          type: number
+        total_top_3_traffic_min:
+          type: number
+        total_top_3_traffic_max:
+          type: number
+        matching_keywords_min:
+          type: number
+        matching_keywords_max:
+          type: number
+        matching_pages_min:
+          type: number
+        matching_pages_max:
+          type: number
+        matching_traffic_min:
+          type: number
+        matching_traffic_max:
+          type: number
+        matching_most_recent_position_min:
+          type: number
+        matching_most_recent_position_max:
+          type: number
+        matching_top_100_positions_min:
+          type: number
+        matching_top_100_positions_max:
+          type: number
+        matching_top_50_positions_min:
+          type: number
+        matching_top_50_positions_max:
+          type: number
+        matching_top_10_positions_min:
+          type: number
+        matching_top_10_positions_max:
+          type: number
+        matching_top_3_positions_min:
+          type: number
+        matching_top_3_positions_max:
+          type: number
+        first_time_available_min:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+        first_time_available_max:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+        last_time_available_min:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+        last_time_available_max:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+        first_seen_min:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+        first_seen_max:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+        last_seen_min:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+        last_seen_max:
+          type: string
+          format: date
+          description: Date in YYYY-MM-DD format
+        fb_comments_min:
+          type: number
+        fb_comments_max:
+          type: number
+        fb_shares_min:
+          type: number
+        fb_shares_max:
+          type: number
+        pinterest_pins_min:
+          type: number
+        pinterest_pins_max:
+          type: number
+        root_domain_include:
+          type: string
+          description: Regular expression for root domains to be included
+        root_domain_exclude:
+          type: string
+          description: Regular expression for root domains to be excluded
+    DomainsExpiredRevealQueryRequest:
+      type: object
+      required:
+        - root_domain_keys
+      properties:
+        root_domain_keys:
+          type: array
+          items:
+            type: number
+          description: Array containing the requested urls or domains
+    DomainsGMBBacklinksQueryRequest:
+      type: object
+      required:
+        - input
+      properties:
+        input:
+          type: string
+          description: Requested URL or domain
+        mode:
+          type: string
+          default: auto
+          enum:
+            - auto
+            - root
+            - domain
+            - url
+          description: Whether to look for a domain or a full URL. Leave empty for auto detection
+        lineCount:
+          type: number
+          default: 20
+          description: Max number of returned results
+        page:
+          type: number
+          default: 1
+        order_by:
+          type: string
+          default: default
+          enum:
+            - default
+            - rating_count
+            - rating_value
+            - is_claimed
+            - total_photos
+            - name
+            - address
+            - phone
+            - longitude
+            - latitude
+            - categories
+            - url
+            - domain
+            - root_domain
+          description: Field used for sorting results. Default value first sorts by descending rating_count, then by descending
+            rating_value.
+        order:
+          type: string
+          default: asc
+          enum:
+            - asc
+            - desc
+          description: Whether the results are sorted in ascending or descending order
+        rating_count_min:
+          type: number
+        rating_count_max:
+          type: number
+        rating_count_keep_na:
+          type: boolean
+        rating_value_min:
+          type: number
+        rating_value_max:
+          type: number
+        rating_value_keep_na:
+          type: boolean
+        latitude_min:
+          type: number
+        latitude_max:
+          type: number
+        latitude_keep_na:
+          type: boolean
+        longitude_min:
+          type: number
+        longitude_max:
+          type: number
+        longitude_keep_na:
+          type: boolean
+        categories_include:
+          type: string
+          description: Regular expression for keywords to be included
+        categories_exclude:
+          type: string
+          description: Regular expression for keywords to be excluded
+        is_claimed:
+          type: boolean
+          description: When FALSE, only return unclaimed companies. When TRUE, only return claimed companies. Leave empty if you
+            don't want to filter.
+    StandardResponse:
+      type: object
+      description: Standard response envelope for site explorer endpoints
+      properties:
+        request_id:
+          type: string
+          description: Server-generated trace ID
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO8601 response time
+        request:
+          type: object
+          description: Echo of the request parameters received by the server
+        meta:
+          type: object
+          description: Pagination and summary info
+          properties:
+            total:
+              type: integer
+              description: Total items matching the request
+            has_next:
+              type: boolean
+            processing_ms:
+              type: integer
+              description: Server-side processing time in milliseconds
+        data:
+          type: object
+          description: Endpoint-specific payload
+          additionalProperties: true
+        warnings:
+          type: array
+          items:
+            type: string
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid API Key
+security:
+  - ApiKeyAuth: []
+paths:
+  /domains/expired:
+    post:
+      operationId: domainsExpired
+      x-openai-isConsequential: false
+      summary: Get expired domains with filtering and sorting options
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsExpiredQueryRequest"
+      responses:
+        "200":
+          description: Domains expired results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/expired/reveal:
+    post:
+      operationId: domainsExpiredReveal
+      x-openai-isConsequential: false
+      summary: Reveal expired domains using root domain keys
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsExpiredRevealQueryRequest"
+      responses:
+        "200":
+          description: Domains expired reveal results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/gmbBacklinks:
+    post:
+      operationId: domainsGMBBacklinks
+      x-openai-isConsequential: false
+      summary: Find Google Business Profile backlinks for a given domain or URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainsGMBBacklinksQueryRequest"
+      responses:
+        "200":
+          description: Domains GMB backlinks results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/gmbBacklinks/map:
+    post:
+      operationId: domainsGMBBacklinksMap
+      x-openai-isConsequential: false
+      summary: Retrieve geolocated backlink map data for a domain or URL's Google Business Profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - input
+              properties:
+                input:
+                  type: string
+                  description: Requested url or domain
+                mode:
+                  type: string
+                  default: auto
+                  enum:
+                    - auto
+                    - root
+                    - domain
+                    - url
+                  description: Whether to look for a domain or a full URL. Leave empty for auto detection
+      responses:
+        "200":
+          description: Domains GMB backlinks map results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /domains/gmbBacklinks/categories:
+    post:
+      operationId: domainsGMBBacklinksCategories
+      x-openai-isConsequential: false
+      summary: List Google Business Profile categories found in backlinks for a domain or URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - input
+              properties:
+                input:
+                  type: string
+                  description: Requested url or domain
+                mode:
+                  type: string
+                  default: auto
+                  enum:
+                    - auto
+                    - root
+                    - domain
+                    - url
+                  description: Whether to look for a domain or a full URL. Leave empty for auto detection
+      responses:
+        "200":
+          description: Domains GMB backlinks categories results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /user/credit:
+    get:
+      operationId: userCredits
+      x-openai-isConsequential: false
+      summary: Get user credit information
+      responses:
+        "200":
+          description: User credit details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
