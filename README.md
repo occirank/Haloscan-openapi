@@ -36,8 +36,8 @@ Pour utiliser l’API Haloscan dans votre GPT personnalisé :
 
 ### Haloscan
 
-1. Un compte Haloscan valide et une clé API.  
-2. Connectez-vous à Haloscan ou inscrivez-vous pour créer un compte.  
+1. Un compte Haloscan valide et une clé API. 
+2. Connectez-vous à Haloscan ou inscrivez-vous pour créer un compte.  🎁 Obtenez 8% de réduction avec le code JEREM
 3. Obtenez votre clé API : [Cliquez ici](https://tool.haloscan.com/user/api)  
 4. Gardez votre clé API confidentielle.
 
