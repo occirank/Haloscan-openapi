@@ -69,10 +69,11 @@ Pour utiliser l’API Haloscan dans votre GPT personnalisé :
    - **Type Auth :** Personnalisé  
    - **Nom de l’en-tête personnalisé :** `haloscan-api-key`  
 4. Schéma :   
-   - Copiez le contenu du fichier `keyword-domain.yaml` ci-dessous.  
-   - Collez directement ce contenu dans le champ **Schéma** lors de la création de l’action.
-5. Politique de confidentialité : [Copier/collez ce lien](https://occirank.fr)
-
+   - Cliquez sur **Importer de l'URL**  
+   - Collez l'URL suivante : https://raw.githubusercontent.com/occirank/Haloscan-openapi/refs/heads/main/keyword-domain.yaml  
+   - Cliquez sur **Importer**  
+5. Politique de confidentialité : [Copier/collez ce lien](https://www.haloscan.com/privacy/)
+   
 ### Étape 3 : Configurer l’accès au GPT
 
 1. Cliquez sur **Créer**  
